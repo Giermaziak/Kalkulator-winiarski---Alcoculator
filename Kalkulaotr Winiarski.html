@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Kalkulator winiarski</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .EOF {
+            width: 100%;
+            clear: both;
+        }
+
+        body {
+            background-color: #ececec;
+            height: 100%;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #wrapper {
+            height: 100%;
+            width: 100%;
+            padding: 10px;
+
+        }
+
+        #calculator {
+            max-width: 950px;
+            background-color: #f7f7f7;
+            min-height: 105px;
+            margin: 0 auto;
+            border: 1px solid #cecece;
+        }
+
+        #calculator_title {
+            width: 100%;
+            background-color: #ce0000;
+            border-bottom: 1px solid #efefef;
+            margin: 0;
+            padding: 3px 5px;
+        }
+
+        #calculator_title>p {
+            margin: 0;
+            padding: 0;
+            font-size: 1.1em;
+            color: #f8f8f8;
+        }
+
+        #calculator_content {
+            width: 100%;
+            padding: 5px;
+
+        }
+
+        #calculator_content_output {
+            border: 1px solid #e2e2e2;
+            text-align: right;
+            margin: 0 5px;
+
+        }
+
+        #calculator_content_output>p {
+            font-size: 1em;
+            color: rgb(102, 102, 102);
+            margin: 0.5em;
+            padding: 0;
+        }
+
+        #calculator_content_data {}
+
+        form {
+            display: block;
+            border-bottom: 1px solid #e2e2e2;
+            padding: 10px 5px;
+        }
+
+
+        .f_label {
+            font-size: 1em;
+            color: #505050;
+        }
+
+        .f_input {
+            width: 100%;
+            font-size: 1em;
+            padding: 5px;
+            text-align: right;
+            color: #6d6d6d;
+            background-color: white;
+            border: 1px solid #e2e2e2;
+        }
+
+        input[type="number"]:disabled {
+            background: #e6e6e6;
+            ;
+        }
+
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        #calculator_content_data_btns {
+            display: block;
+            width: fit-content;
+            float: right;
+            padding: 5px 0 0 0;
+        }
+
+        .clc_btn {
+            background-color: #ce0000;
+            border: 1px solid #e2e2e2;
+            display: block;
+            width: fit-content;
+            float: left;
+            margin-left: 2px;
+            border-radius: 5px;
+        }
+
+        .clc_btn>p {
+            padding: 0;
+            font-size: 1em;
+            color: #f1f1f1;
+            margin: 0.2em;
+            display: inline-block;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <div id="calculator">
+            <div id="calculator_title">
+                <p>Kalkulator Winiarski</p>
+            </div>
+
+            <div id="calculator_content">
+                <div id="calculator_content_output">
+                    <p id=calculator_content_output_figure>0</p>
+                </div>
+
+                <div id="calculator_content_data">
+                    <form>
+                        <label for="volume" class="f_label">Objętość(l)</label><br>
+                        <input type="number" class="f_input" id="form_volume" name="volume" placeholder="-"><br>
+                        <label for="sugar" class="f_label">Cukier(kg):</label><br>
+                        <input type="number" class="f_input" id="form_sugar" name="sugar" placeholder="-"><br>
+                        <label for="alcohol" class="f_label">Alkochol(%):</label><br>
+                        <input type="number" class="f_input" id="form_alcohol" name="alcohol" placeholder="-">
+                    </form>
+                    <form>
+                        <label for="BLG" class="f_label">Startowe BLG</label><br>
+                        <input type="number" class="f_input" id="form_BLG" name="BLG" placeholder="0"><br>
+                    </form>
+                    <div id="calculator_content_data_btns">
+                        <div class="clc_btn" id="clc_btn-reset" onclick="btn_clearAll()">
+                            <p>Wyczyść</p>
+                        </div>
+                        <div class="clc_btn" id="clc_btn-calculate" onclick="btn_calculate()">
+                            <p>Oblicz</p>
+                        </div>
+                    </div>
+                    <div class="EOF"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+
+    var inputBox = document.getElementsByClassName("f_input");
+
+    for (var i = 0; i < (inputBox.length) - 1; i++) {
+        inputBox[i].addEventListener('keyup', ev_edit_input, false);
+    }
+
+    function ev_edit_input() {
+        console.log("Ev: Key up on input box");
+        var fullField = 0;
+        for (var i = 0; i < (inputBox.length) - 1; i++) {
+            if (inputBox[i].value != "")
+                fullField++;
+        }
+
+        if (fullField > 1) {
+            for (var i = 0; i < (inputBox.length) - 1; i++) {
+                if (inputBox[i].value == "")
+                    inputBox[i].disabled = true;
+            }
+        }
+        else {
+            for (var i = 0; i < (inputBox.length) - 1; i++) {
+                inputBox[i].disabled = false;
+            }
+        }
+    }
+
+    function btn_clearAll() {
+        console.log("Btn: Clear all fields");
+        for (var i = 0; i < inputBox.length; i++) {
+            inputBox[i].value = "";
+        }
+        document.getElementById("calculator_content_output_figure").textContent = "0";
+        ev_edit_input();
+    }
+
+    function btn_calculate() {
+
+        var valueArr = new Array(4);
+        for (var i = 0; i < 4; i++) {
+            valueArr[i] = new Array(2);//in case someone bug interface
+        }
+
+        for (var i = 0; i < inputBox.length; i++) {
+            if (inputBox[i].value != "") {
+                valueArr[i][0] = sanitizeData(inputBox[i].value);
+                valueArr[i][1] = true;
+            }
+            else
+                valueArr[i][1] = false;
+        }
+
+        var validTestCount = 0;
+        for (var i = 0; i < (inputBox.length) - 1; i++) {
+            if (valueArr[i][1])
+                validTestCount++;
+        }
+
+        if (validTestCount > 2) {
+            console.log("ERR: Too many base values: " + validTestCount);
+        }
+        else {
+            if (valueArr[0][1] && valueArr[1][1]) {//volumie and sugar
+                var sugar = parseFloat(valueArr[1][0]);
+                var volume = parseFloat(valueArr[0][0]);
+
+                var calcRes = ((sugar * 1000) / (17 * volume));
+                if (valueArr[3][1])
+                    calcRes += blgToAlcohol(valueArr[3][0]);
+
+                document.getElementById("calculator_content_output_figure").textContent = (roundValue(calcRes, 2) + "%");
+            }
+
+            if (valueArr[0][1] && valueArr[2][1]) {//volume and alcohol
+                var volume = parseFloat(valueArr[0][0]);
+                var alcohol = parseFloat(valueArr[2][0]);
+
+                if (valueArr[3][1])
+                    alcohol -= blgToAlcohol(valueArr[3][0]);
+
+                var calcRes = (alcohol * 17 * volume);
+                document.getElementById("calculator_content_output_figure").textContent = (roundValue(calcRes, 0) + "g");
+            }
+
+            if (valueArr[1][1] && valueArr[2][1]) {//sugar and alcohol
+                var sugar = parseFloat(valueArr[1][0]);
+                var alcohol = parseFloat(valueArr[2][0]);
+
+                if (valueArr[3][1])
+                    alcohol -= blgToAlcohol(valueArr[3][0]);
+
+                var calcRes = ((sugar * 1000) / (17 * alcohol));
+                document.getElementById("calculator_content_output_figure").textContent = (roundValue(calcRes, 2) + "l");
+            }
+        }
+
+
+
+    }
+
+
+    function sanitizeData(data) {
+        data = data.replace(",", ".");
+        return data;
+    }
+
+    function roundValue(value, scale) {
+        var tmpScale = Math.pow(10, scale)
+        return (Math.round(value * tmpScale)) / tmpScale;
+    }
+
+    function blgToAlcohol(blg) {
+        return blg * 0.52;
+    }
+//info: zamało danych, validacja pobieranej danej???
+</script>
+
+</html>
